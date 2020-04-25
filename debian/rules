@@ -20,25 +20,29 @@ clean:
 	rm -f aclocal.m4 configure Makefile.in Makefile INSTALL
 	rm -rf config
 	rm -rf m4
+	rm -rf debian/.debhelper
 	dh clean
 
-binary binary-arch binary-indep: install
-	rm -f debian/files
-	dh binary --before dh_gencontrol
+override_dh_gencontrol:
 	rm -f debian/*/DEBIAN/conffiles
 	if [ -f "../.VYATTA_DEV_BUILD" ]; then \
 		dh_gencontrol -- -v999.dev; \
 	else \
 		dh_gencontrol; \
 	fi
-	dh binary --after dh_gencontrol
+
+binary binary-arch binary-indep: install
+	rm -f debian/files
+	dh binary
+
+override_dh_auto_configure:
+
+override_dh_auto_test:
 
 build: Makefile
 build:
 	rm -f debian/*.debhelper*
-	dh build --before configure
-	dh build --after configure --before dh_auto_test
-	dh build --after dh_auto_test
+	dh build
 
 Makefile: Makefile.in
 	./configure $(cfg_opts)
@@ -47,7 +51,9 @@ Makefile.in: Makefile.am configure.ac
 	mkdir -p m4
 	autoreconf -i --force
 
-install: build
-	dh install --before dh_install
+override_dh_install:
 	dh_install $(inst_opts)
+
+install: build
+	dh install
 

@@ -24,7 +24,13 @@ debian/libvyatta-util1
 debian/libvyatta-util-dev
 debian/*.debhelper.log
 debian/*.substvars
+debian/.debhelper/
+debian/changelog.*
+debian/autoreconf.after
+debian/autoreconf.before
+debian/debhelper-build-stamp
 INSTALL
 Makefile.in
 Makefile
-
+src/ipset-check-member
+src/vyatta-validate-type
